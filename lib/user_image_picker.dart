@@ -41,12 +41,20 @@ class _UserImagePickerState extends State<UserImagePicker> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.grey,
-          foregroundImage:
-              _pickedImageFile != null ? FileImage(_pickedImageFile!) : null,
+        Container(
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: _pickedImageFile != null
+              ? Image.file(_pickedImageFile!)
+              : Image.asset('assets/dumy.jpg'),
+          // radius: 40,
+          // backgroundColor: Colors.grey,
+          // foregroundImage:
         ),
         TextButton.icon(
           onPressed: _pickImage,

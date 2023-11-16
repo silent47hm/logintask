@@ -13,100 +13,118 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _form = GlobalKey<FormState>();
-
+  bool isPasswordVisible = false;
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
   void _submit() {
-  final _isvaild =  _form.currentState!.validate();
+    final _isvaild = _form.currentState!.validate();
 
-  if (_isvaild){
-    _form.currentState!.save();
-    print(_enteredEmail);
-    print(_enteredPassword);
+    if (_isvaild) {
+      _form.currentState!.save();
+      print(_enteredEmail);
+      print(_enteredPassword);
+    }
   }
+
+  void togglePasswordVisibility() {
+    setState(() {
+      isPasswordVisible = !isPasswordVisible;
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white10,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Card(
+                color: Colors.white,
                 margin: const EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Form(
                       key: _form,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            decoration: const InputDecoration(
-                                labelText: 'Email Address'),
-                            keyboardType: TextInputType.emailAddress,
-                            autocorrect: false,
-                            textCapitalization: TextCapitalization.none,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty || !value.contains('@')){
-                                return 'Please enter a valid email Id.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value){
-                              _enteredEmail = value!;
-                            },
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        TextFormField(
+                          decoration:
+                              const InputDecoration(labelText: 'Email Address'),
+                          keyboardType: TextInputType.emailAddress,
+                          autocorrect: false,
+                          textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            if (value == null ||
+                                value.trim().isEmpty ||
+                                !value.contains('@')) {
+                              return 'Please enter a valid email Id.';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _enteredEmail = value!;
+                          },
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'Password',
+                              suffixIcon: IconButton(
+                                  onPressed: togglePasswordVisibility,
+                                  icon: Icon(isPasswordVisible
+                                      ? Icons.lock
+                                      : Icons.lock_open))),
+                          obscureText: isPasswordVisible,
+                          validator: (value) {
+                            if (value == null || value.trim().length < 6) {
+                              return 'Password should be atleast 6 digit';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _enteredPassword = value!;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _submit,
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(500, 30),
+                            backgroundColor: Color.fromARGB(255, 0, 0, 0),
                           ),
-                          TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
-                            obscureText: true,
-                            validator:(value) {
-                             if (value == null || value.trim().length < 6){
-                                return 'Password should be atleast 6 digit';
-                              }
-                              return null;
-                            },
-                            onSaved: (value){
-                              _enteredPassword = value!;
-                            },
+                          child: Text(
+                            _isLogin ? 'Login' : 'Signin',
+                            style: GoogleFonts.poppins().copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              fixedSize: Size(500, 30),
-                              backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                            ),
-                            child: Text(_isLogin ? 'Login' : 'Signin',style: GoogleFonts.poppins().copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                          ),
-                          Column(
-                            children: [
-                              Text('Dont have any account'),
-                            ElevatedButton(onPressed: (){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (ctx) => SignupScreen()));
-                            },
-                            style: ElevatedButton.styleFrom(
-                              fixedSize: Size(100, 30),
-                              backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                            ),
-                             child: Text('Signup',style: GoogleFonts.poppins().copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),))
-                            ],
-                          ), 
-                        ] 
-                      ),
+                        ),
+                        Column(
+                          children: [
+                            Text('Dont have any account'),
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (ctx) => SignupScreen()));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(100, 30),
+                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                                child: Text(
+                                  'Signup',
+                                  style: GoogleFonts.poppins().copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ))
+                          ],
+                        ),
+                      ]),
                     ),
                   ),
                 ),
